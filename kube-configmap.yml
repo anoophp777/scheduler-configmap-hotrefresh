@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-configmap
+  namespace: some-ns
+data:
+  application.yml: |-
+    #################### Properties for local environment deployment ####################
+    spring:
+      profiles: local
+
+    webservice:
+      endpoint:
+        transferfund: http://trasferfundapp.com/v3
+        customerinfo: http://customerinfo.com/v33
+        getbalance: http://getbalance.com/v333

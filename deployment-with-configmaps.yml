@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configmap-k8
+  labels:
+    app: configmap-k8
+    namespace: some-ns
+    role: backend
+    stage: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: configmap-k8
+      version: v0.0.1
+  template:
+    metadata:
+      labels:
+        app: configmap-k8
+        version: v0.0.1
+    spec:
+      containers:
+        - name: configmap-k8
+          image: anoophallimala/configmaps:v1
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 6060
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: local
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: some-ns
+  name: configmap-reader
+rules:
+  - apiGroups: ["","extensions","apps"]
+    resources: ["configmaps","pods","secrets"]
+    verbs: ["get","list","watch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: default-reader-binding
+  namespace: some-ns
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: some-ns
+    apiGroup: ""
+roleRef:
+  kind: Role
+  name: configmap-reader
+  apiGroup: ""

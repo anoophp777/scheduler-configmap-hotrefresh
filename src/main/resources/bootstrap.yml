@@ -1,0 +1,21 @@
+management:
+  endpoint:
+    restart:
+      enabled: true
+    health:
+      enabled: true
+    info:
+      enabled: true
+
+spring:
+  application:
+    name: configmap-app
+  cloud:
+    kubernetes:
+      config:
+        name: kube-configmap
+        namespace: some-ns
+      reload:
+        enabled: true
+        mode: event
+        period: 1000
